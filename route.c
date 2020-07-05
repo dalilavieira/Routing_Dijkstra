@@ -6,6 +6,20 @@
 #define V 9
 #define TAM 3
 
+int printPath(int parent[], int j) 
+{ 
+//	PTAM += 1;
+	// Base Case : If j is source 
+	int contador = 0;
+
+	while(parent[j] != -1){
+		contador ++;
+		//printf("%d ", j);
+		j = parent[j];
+	}
+	return contador;
+} 
+
 int minDistance(int dist[], int sptSet[]) 
 { 
 	
@@ -19,31 +33,6 @@ int minDistance(int dist[], int sptSet[])
 
 	return min_index; 
 } 
-/*
-//TODO: FAZER VERSAO ITERATIVA
-void printPath(int parent[], int j) 
-{ 
-//	PTAM += 1;
-	// Base Case : If j is source 
-	if (parent[j] == - 1) 
-		return; 
-
-	printPath(parent, parent[j]); 
-
-	printf("%d ", j); 
-} 
-
-int printSolution(int dist[], int n, int parent[], int dest) 
-{ 
-	int src = 1; 
-	printf("Vertex\t Distance\tPath"); 
-	//for (int i = 1; i < V; i++) 
-	//{ 
-		printf("\n%d -> %d \t\t %d\t\t%d ", src, dest, dist[dest], src); 
-		//printPath(parent, dest); 
-	///} 
-} 
-*/
 
 void dijkstra(int graph[V][V], int src, int dest, int * parent) 
 { 
@@ -87,27 +76,11 @@ int main(){
 	int m[V][V];
 
 	int edges = 5;
-	//E1
-	//int e_a[] = {1, 2, 4, 3, 5};
-	//int e_b[] = {4, 4, 5, 5, 6};
+
+
 	//E2
 	int e_a[] = {1, 2, 3, 4, 5};
 	int e_b[] = {6, 6, 6, 6, 6};
-	//E3
-        //int e_a[] = {1, 2, 3, 4};
-	//int e_b[] = {5, 5, 5, 5};
-	//E4
-	//int e_a[] = {1, 2, 3, 4, 6, 5, 8, 7};
-	//int e_b[] = {4, 4, 4, 5, 5, 7, 5, 9};
-	//E5
-	//int e_a[] = {1, 2, 4, 5, 3, 6, 8, 7};
-	//int e_b	[] = {3, 3, 6, 6, 7, 7, 7, 9};
-	//E6
-	//int e_a[] = {1,2,4,5,7,8,3,6,6,9,10,11,15,16,14,12};
-	//int e_b[] = {3,3,6,6,9,9,10,10,11,11,12,12,14,14,13,13};
-	//E7
-	//int e_a[] = {1,2,3,5,6,7,11,12,13,4,8,15,10,14,9};
-	//int e_b[] = {4,4,4,8,8,8,10,10,10,9,9,14,14,16,14};
 
 	int a[edges], b[edges];
 	int A, B;
@@ -116,146 +89,148 @@ int main(){
 
 	int entradas[V][4];
 	int saidas[V][4];
-	int indice_e[V];
-	int indice_s[V];
+
+	int ALU[V];
+	int ALUREG[V];	
+	int BYPASS[V];
+
 
 	//PRIMEIRO EXEMPLO
 	/*int a[] = {0, 3, 1, 5, 2};
 	int b[] = {1, 1, 2, 2, 8};*/
 	
 	//matriz resultado do placement
-	//E1
-	//int grid[] = {1, 4, 5, 2, 255, 3, 255, 255, 6};
 	//E2
 	int grid[] = {1, 2, 3, 255, 6, 4, 255, 5, 255};
-	//E3
-	//int grid[] = {1, 2, 3,255, 5, 4, 255, 255, 255};
-	//E4
-	//int grid[] = {1, 4, 5, 2, 3, 6, 9, 8, 7};
-	//E5
-	//int grid[] = {1, 3, 7, 2, 4, 6, 9, 5, 8};
-	//E6
-	//int grid[] = {1,2,4,5,10,3,6,7,12,15,11,9,13,14,16,8};
-	//E7
-	//int grid[] = {2,3,5,6,1,4,8,7,11,13,9,16,12,10,14,15};
 
 	//forma vetor de vertices de origem
 	for (int j=0; j<edges; j++){
 		for (int i=0; i<TAM*TAM; i++){
 			if(e_a[j] == grid[i]){
 				a[j] = i;
-				printf("%d\n", i);
+				//printf("%d\n", i);
 			}
 		}
 	}
-	printf("\n");
+	//printf("\n");
 	for (int j=0; j<edges; j++){
 		for (int i=0; i<TAM*TAM; i++){
 			if(e_b[j] == grid[i]){
 				b[j] = i;
-				printf("%d\n", i);
+				//printf("%d\n", i);
 			}
 		}
 	}	
 
 
 	for(i=0; i<V; i++){
-		indice_e[i] = 0;
-		indice_s[i] = 0;
+		//indice_e[i] = 0;
+		//indice_s[i] = 0;
+		ALU[i] = 0;
+		ALUREG[i] = 0;
+		BYPASS[i] = 0;
 		for(j=0; j<V; j++){
 			m[i][j] = 0;
 			//printf("%d",m);
 		}
 	}
 
+	int peso = 2;
 	for(i=0; i<TAM; i++){
 		for(j=0; j<TAM; j++){
 			if(i<TAM-1 & j<TAM-1){
-				m[i*TAM+j][i*TAM+(j+1)] = 1; 
-				m[i*TAM+(j+1)][i*TAM+j] = 1; 
-				m[i*TAM+j][(i+1)*TAM+j] = 1; 
-				m[(i+1)*TAM+j][i*TAM+j] = 1; 
+				m[i*TAM+j][i*TAM+(j+1)] = peso; 
+				m[i*TAM+(j+1)][i*TAM+j] = peso; 
+				m[i*TAM+j][(i+1)*TAM+j] = peso; 
+				m[(i+1)*TAM+j][i*TAM+j] = peso; 
 			}else if(i<TAM-1){
-				m[i*TAM+j][(i+1)*TAM+j] = 1; 
-				m[(i+1)*TAM+j][i*TAM+j] = 1; 
+				m[i*TAM+j][(i+1)*TAM+j] = peso; 
+				m[(i+1)*TAM+j][i*TAM+j] = peso; 
 			}else if(j<TAM-1){
-				m[i*TAM+j][i*TAM+(j+1)] = 1; 
-				m[i*TAM+(j+1)][i*TAM+j] = 1; 
+				m[i*TAM+j][i*TAM+(j+1)] = peso; 
+				m[i*TAM+(j+1)][i*TAM+j] = peso; 
 			}
 		}
 	}
 
-	for(i=0; i<V; i++){
+	/*for(i=0; i<V; i++){
 		for(j=0; j<V; j++){
 			printf("%d ",m[i][j]);
 		}
 		printf("\n");
 	}
-	printf("\n");
+	printf("\n");*/
 
-	/*dijkstra(m, 0, 5, parent); 
-	printPath(parent, 5); 
-	printf("\n");
-        printf("%d\n",PTAM);*/
+
 
 	for(i=0; i<edges; i++){
-		A = a[i];
-		B = b[i];
-		printf("%d ",A);
+		A = a[i]; //origem
+		B = b[i]; //destino
+
+		//printf("%d ",A);
 		dijkstra(m, A, B, parent);
-		//printPath(parent, B);
-		printf("\n");
-		
-		j = 0;
-		while(1){
-			if(j ==0 ){
-				destino = B;
-			}else{
-				destino = origem;
+		int cont = printPath(parent, B);
+		//printf("\n");
+
+		printf("%d \n",cont);
+		//PASSO1: faz roteamento trivial
+		if(cont == 1){			
+			j = 0;
+			while(1){
+				if(j ==0 ){
+					destino = B;
+				}else{
+					destino = origem;
+				}
+
+				origem = parent[destino];
+				if(origem == -1)
+					break;
+
+				printf("origem=%d dest=%d\n",origem,destino);
+
+				if(destino == origem-1){
+					entradas[destino][0] = origem;
+					saidas[origem][2] = destino;
+				}else if(destino = origem-TAM){
+					entradas[destino][1] = origem; 
+					saidas[origem][3] = destino; 
+				}else if(destino = origem-1){
+					entradas[destino][2] = origem; 
+					saidas[origem][0] = destino; 
+				}else if(destino = origem-TAM){
+					entradas[destino][3] = origem;
+					saidas[origem][1] = destino;  
+				}else{
+					printf("DEU RUIM\n");
+					FLAG = 1;
+					//exit(1);
+					break;
+				}
+				//aumenta peso das arestas que levam a esse mesmo destino
+				for(int aux=0; aux<V;aux++)
+					m[aux][destino]++;
+				//marca ALU como usada
+				ALU[destino] = 1; 
+				//remove aresta usada
+				m[origem][destino] = 0;
+
+	
+				j++;		
 			}
-
-			origem = parent[destino];
-			if(origem == -1)
+			if(FLAG == 1)
 				break;
-
-			printf("origem=%d dest=%d\n",origem,destino);
-
-			if(indice_s[origem]<4 & indice_e[destino]<4){
-				entradas[destino][indice_e[destino]] = origem;
-				saidas[origem][indice_s[origem]] = destino;
-				indice_e[destino] += 1;
-				indice_s[origem] +=1;
-			}else{
-				printf("DEU RUIM\n");
-				FLAG = 1;
-				//exit(1);
-				break;
-			}	
-			j++;		
+			printf("\n");
 		}
-		if(FLAG == 1)
-			break;
-		printf("\n");
+		
+		//PASSO2: faz roteamento não-trivial
+		else if(cont != 1){	
+		}
+	
+	
+
 	}
 
-	for(i=0; i<V; i++){
-		printf("entradas do PE%d: ",i);
-		for(j=0; j<indice_e[i]; j++){
-			printf("%d ", entradas[i][j]);
-		}
-		printf("\n");
-	}	
-	printf("\n");
-	printf("\n");
-
-	for(i=0; i<V; i++){
-		printf("saidas do PE%d: ",i);
-		for(j=0; j<indice_s[i]; j++){
-			printf("%d ", saidas[i][j]);
-		}
-		printf("\n");
-	}
-	printf("\n");
 
 }
 
