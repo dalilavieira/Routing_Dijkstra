@@ -75,12 +75,12 @@ int main(){
 	int i,j;
 	int m[V][V];
 
-	int edges = 5;
+	int edges = 7;
 
 
 	//E2
-	int e_a[] = {1, 2, 3, 4, 5};
-	int e_b[] = {6, 6, 6, 6, 6};
+	int e_a[] = {1, 2, 3, 4, 5, 6, 9};
+	int e_b[] = {6, 6, 6, 6, 7, 5, 5};
 
 	int a[edges], b[edges];
 	int A, B;
@@ -93,6 +93,7 @@ int main(){
 	int ALU[V];
 	int ALUREG[V];	
 	int BYPASS[V];
+	int ORIGEM_DF[V][V];
 
 
 	//PRIMEIRO EXEMPLO
@@ -101,7 +102,7 @@ int main(){
 	
 	//matriz resultado do placement
 	//E2
-	int grid[] = {1, 2, 3, 255, 6, 4, 255, 5, 255};
+	int grid[] = {1, 2, 8, 3, 6, 4, 9, 5, 7};
 
 	//forma vetor de vertices de origem
 	for (int j=0; j<edges; j++){
@@ -164,8 +165,8 @@ int main(){
 
 
 	for(i=0; i<edges; i++){
-		A = a[i]; //origem
-		B = b[i]; //destino
+		A = a[i]; //origem no dataflow
+		B = b[i]; //destino no dataflow
 
 		//printf("%d ",A);
 		dijkstra(m, A, B, parent);
@@ -213,9 +214,10 @@ int main(){
 				//marca ALU como usada
 				ALU[destino] = 1; 
 				//remove aresta usada
-				m[origem][destino] = 0;
+				//m[origem][destino] = 0;
+				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
+				ORIGEM_DF[origem][destino] = A;
 
-	
 				j++;		
 			}
 			if(FLAG == 1)
@@ -225,9 +227,72 @@ int main(){
 		
 		//PASSO2: faz roteamento não-trivial
 		else if(cont != 1){	
+			j = 0;
+			while(1){
+				if(j ==0 ){
+					destino = B;
+				}else{
+					destino = origem;
+				}
+
+				origem = parent[destino];
+				if(origem == -1)
+					break;
+
+				printf("origem=%d dest=%d\n",origem,destino);
+
+				if(destino == origem-1){
+					entradas[destino][0] = origem;
+					saidas[origem][2] = destino;
+				}else if(destino = origem-TAM){
+					entradas[destino][1] = origem; 
+					saidas[origem][3] = destino; 
+				}else if(destino = origem-1){
+					entradas[destino][2] = origem; 
+					saidas[origem][0] = destino; 
+				}else if(destino = origem-TAM){
+					entradas[destino][3] = origem;
+					saidas[origem][1] = destino;  
+				}else{
+					printf("DEU RUIM\n");
+					FLAG = 1;
+					//exit(1);
+					break;
+				}
+
+				//marca ALU como usada
+				if(destino == B){
+					if(ALUREG[destino] == 1){
+						printf("DEU RUIM B\n");
+						FLAG = 1;
+						break;
+					}else
+						ALU[destino] = 1;
+				}else if(BYPASS[destino] == 0)
+					BYPASS[destino] = 1;
+				else if(ALUREG[destino] == 0)
+					ALUREG[destino] = 1;
+				else{
+					printf("DEU RUIM bypassXalureg\n");
+					FLAG = 1;
+					break;
+				}
+					
+
+				//aumenta peso das arestas que levam a esse mesmo destino
+				for(int aux=0; aux<V;aux++)
+					m[aux][destino]++;				 
+				//remove aresta usada
+				//m[origem][destino] = 0;
+				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
+				ORIGEM_DF[origem][destino] = A;
+
+				j++;		
+			}
+			if(FLAG == 1)
+				break;
+			printf("\n");
 		}
-	
-	
 
 	}
 
