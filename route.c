@@ -141,6 +141,7 @@ int main(){
 		ALU[i] = 0;
 		ALUREG[i] = 0;
 		BYPASS[i] = 0;
+		//printf("BYPASS %d = %d", i, BYPASS[i]);
 		for(j=0; j<V; j++){
 			m[i][j] = 0;
 			//printf("%d",m);
@@ -272,13 +273,13 @@ int main(){
 				if(destino == origem-1){
 					entradas[destino][0] = origem;
 					saidas[origem][2] = destino;
-				}else if(destino = origem-TAM){
+				}else if(destino == origem-TAM){
 					entradas[destino][1] = origem; 
 					saidas[origem][3] = destino; 
-				}else if(destino = origem-1){
+				}else if(destino == origem+1){
 					entradas[destino][2] = origem; 
 					saidas[origem][0] = destino; 
-				}else if(destino = origem-TAM){
+				}else if(destino == origem+TAM){
 					entradas[destino][3] = origem;
 					saidas[origem][1] = destino;  
 				}else{
@@ -289,22 +290,25 @@ int main(){
 				}
 
 				//marca ALU como usada
-				//if(destino == B){
-				//	if(ALUREG[destino] == 1){
-				//		printf("DEU RUIM B\n");
-				//		FLAG = 1;
-				//		break;
-				//	}else
-				//		ALU[destino] = 1;
-				//}else if(BYPASS[destino] == 0)
-				//	BYPASS[destino] = 1;
-				//else if(ALUREG[destino] == 0)
-				//	ALUREG[destino] = 1;
-				//else{
-				//	printf("DEU RUIM bypassXalureg\n");
-				//	FLAG = 1;
-				//	break;
-				//}
+				//printf("%d %d %d \n",ALUREG[destino], BYPASS[destino], destino);
+				if(destino == B){
+					printf("dest e B \n");
+					if(ALUREG[destino] == 1){
+						printf("DEU RUIM B\n");
+						FLAG = 1;
+						break;
+					}else
+						ALU[destino] = 1;
+				}else if(BYPASS[destino] == 0){
+					BYPASS[destino] = 1;
+				}else if(ALUREG[destino] == 0){
+					ALUREG[destino] = 1;
+				}
+				else{
+					printf("DEU RUIM bypassXalureg\n");
+					FLAG = 1;
+					break;
+				}
 					
 
 				//aumenta peso das arestas que levam a esse mesmo destino
