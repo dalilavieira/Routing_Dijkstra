@@ -173,7 +173,9 @@ int main(){
 	}
 	printf("\n");*/
 
-
+	int jafoi[edges];
+	for(i=0; i<edges; i++)
+		jafoi[i] = 0;
 
 	for(i=0; i<edges; i++){
 		A = a[i]; //origem no dataflow
@@ -186,7 +188,8 @@ int main(){
 
 		printf("%d \n",cont);
 		//PASSO1: faz roteamento trivial
-		//if(cont == 1){			
+		if(cont == 1){	
+			jafoi[i] = 1;		
 			j = 0;
 			while(1){
 				if(j ==0 ){
@@ -227,7 +230,6 @@ int main(){
 				ALU[destino] = 1; 
 				//remove aresta usada
 				//printf("\n od %d %d\n",origem,destino);
-				//m[destino][origem] = 0;
 				m[origem][destino] = 0;
 				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
 				ORIGEM_DF[origem][destino] = A;
@@ -237,10 +239,22 @@ int main(){
 			if(FLAG == 1)
 				break;
 			printf("\n");
-		//}
-		
+		}
+
+	}
+	printf("INICIA PASSO 2\n");
+	for(i=0; i<edges; i++){
+		A = a[i]; //origem no dataflow
+		B = b[i]; //destino no dataflow
+
+		printf("A%d B%d",A,B);
+		dijkstra(m, A, B, parent);
+		int cont = printPath(parent, B);
+		printf("\n");
+
+		printf("%d \n",cont);
 		//PASSO2: faz roteamento não-trivial
-	/*8	else if(cont != 1){	
+		if(cont != 1){	
 			j = 0;
 			while(1){
 				if(j ==0 ){
@@ -275,29 +289,29 @@ int main(){
 				}
 
 				//marca ALU como usada
-				if(destino == B){
-					if(ALUREG[destino] == 1){
-						printf("DEU RUIM B\n");
-						FLAG = 1;
-						break;
-					}else
-						ALU[destino] = 1;
-				}else if(BYPASS[destino] == 0)
-					BYPASS[destino] = 1;
-				else if(ALUREG[destino] == 0)
-					ALUREG[destino] = 1;
-				else{
-					printf("DEU RUIM bypassXalureg\n");
-					FLAG = 1;
-					break;
-				}
+				//if(destino == B){
+				//	if(ALUREG[destino] == 1){
+				//		printf("DEU RUIM B\n");
+				//		FLAG = 1;
+				//		break;
+				//	}else
+				//		ALU[destino] = 1;
+				//}else if(BYPASS[destino] == 0)
+				//	BYPASS[destino] = 1;
+				//else if(ALUREG[destino] == 0)
+				//	ALUREG[destino] = 1;
+				//else{
+				//	printf("DEU RUIM bypassXalureg\n");
+				//	FLAG = 1;
+				//	break;
+				//}
 					
 
 				//aumenta peso das arestas que levam a esse mesmo destino
 				for(int aux=0; aux<V;aux++)
 					m[aux][destino]++;				 
 				//remove aresta usada
-				//m[origem][destino] = 0;
+				m[origem][destino] = 0;
 				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
 				ORIGEM_DF[origem][destino] = A;
 
@@ -306,7 +320,7 @@ int main(){
 			if(FLAG == 1)
 				break;
 			printf("\n");
-		}*/
+		}
 
 	}
 
