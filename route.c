@@ -245,6 +245,11 @@ int main(){
 	}
 	printf("INICIA PASSO 2\n");
 	for(i=0; i<edges; i++){
+		while(jafoi[i] == 1)
+			i++;
+		if(i == edges)
+			break;
+
 		A = a[i]; //origem no dataflow
 		B = b[i]; //destino no dataflow
 
@@ -255,7 +260,7 @@ int main(){
 
 		printf("%d \n",cont);
 		//PASSO2: faz roteamento não-trivial
-		if(cont != 1 && jafoi[i] != 1){	
+		if(cont != 1){	
 			j = 0;
 			while(1){
 				if(j ==0 ){
