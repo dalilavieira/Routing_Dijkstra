@@ -85,6 +85,7 @@ int main(){
 
 	int i,j;
 	int m[V][V];
+	int m_copia[V][V];
 
 	int edges = 7;
 
@@ -144,6 +145,8 @@ int main(){
 		//printf("BYPASS %d = %d", i, BYPASS[i]);
 		for(j=0; j<V; j++){
 			m[i][j] = 0;
+			m_copia[i][j] = 0;
+			ORIGEM_DF[i][j] = -1;
 			//printf("%d",m);
 		}
 	}
@@ -165,6 +168,10 @@ int main(){
 			}
 		}
 	}
+
+	for(i=0; i<V; i++)
+		for(j=0; j<V; j++)
+			m_copia[i][j] = m[i][j];
 
 	/*for(i=0; i<V; i++){
 		for(j=0; j<V; j++){
@@ -244,7 +251,12 @@ int main(){
 
 	}
 	printf("INICIA PASSO 2\n");
+	for(int u=0; u<V; u++)
+		for(int v=0; v<V; v++)
+			m_copia[u][v] = m[u][v];
+
 	for(i=0; i<edges; i++){
+		//Não refazer dijkstra para arestas ja roteadas
 		while(jafoi[i] == 1)
 			i++;
 		if(i == edges)
@@ -252,6 +264,13 @@ int main(){
 
 		A = a[i]; //origem no dataflow
 		B = b[i]; //destino no dataflow
+
+		for(int u=0; u<V; u++){
+			for(int v=0; v<V; v++){
+				if(ORIGEM_DF[u][v] == A)
+					m[u][v] = 100;
+			}
+		}		
 
 		printf("A%d B%d",A,B);
 		dijkstra(m, A, B, parent);
@@ -324,6 +343,14 @@ int main(){
 				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
 				ORIGEM_DF[origem][destino] = A;
 				//printf("A = %d\n", A);
+
+				for(int u=0; u<V; u++){
+					for(int v=0; v<V; v++){
+						//essa arestas sempre sao arestas usadas
+						if(ORIGEM_DF[u][v] == A)
+							m[u][v] = 0;
+					}
+				}
 
 				j++;		
 			}
