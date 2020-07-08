@@ -76,7 +76,7 @@ void dijkstra(int graph[V][V], int src, int dest, int * parent)
 
 	// print the constructed 
 	// distance array 
-	//printSolution(dist, V, parent, dest); 
+//	printSolution(dist, V, parent, dest); 
 } 
 
 int main(){
@@ -255,7 +255,7 @@ int main(){
 
 		printf("%d \n",cont);
 		//PASSO2: faz roteamento não-trivial
-		if(cont != 1){	
+		if(cont != 1 && jafoi[i] != 1){	
 			j = 0;
 			while(1){
 				if(j ==0 ){
@@ -318,6 +318,7 @@ int main(){
 				m[origem][destino] = 0;
 				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
 				ORIGEM_DF[origem][destino] = A;
+				//printf("A = %d\n", A);
 
 				j++;		
 			}
