@@ -3,8 +3,8 @@
 
 //TODO: definir um valor pra INT_MAX, se der problemas cm limits.h
 //TODO: fazer flag e remover exit(1)
-#define V 9
-#define TAM 3
+#define V 16
+#define TAM 4
 
 int printPath(int parent[], int j) 
 { 
@@ -87,12 +87,15 @@ int main(){
 	int m[V][V];
 	int m_copia[V][V];
 
-	int edges = 7;
+	int edges = 12;
 
 
 	//E2
-	int e_a[] = {1, 2, 3, 4, 5, 6, 9};
-	int e_b[] = {6, 6, 6, 6, 7, 5, 5};
+	//int e_a[] = {1, 2, 3, 4, 5, 6, 9};
+	//int e_b[] = {6, 6, 6, 6, 7, 5, 5};
+
+	int e_a[] = {1, 2, 2, 3, 3, 7, 6, 5, 5, 4, 8, 9};
+	int e_b[] = {4, 4, 5, 5, 6, 6, 9, 9, 8, 8, 10, 10};
 
 	int a[edges], b[edges];
 	int A, B;
@@ -114,7 +117,8 @@ int main(){
 	
 	//matriz resultado do placement
 	//E2
-	int grid[] = {1, 2, 8, 3, 6, 4, 9, 5, 7};
+	//int grid[] = {1, 2, 8, 3, 6, 4, 9, 5, 7};
+	int grid[] = {1, 4, 2, 3, 255, 8, 5, 6, 255, 10, 9, 7, 255, 255, 255, 255};
 
 	//forma vetor de vertices de origem
 	for (int j=0; j<edges; j++){
@@ -259,8 +263,10 @@ int main(){
 		//Não refazer dijkstra para arestas ja roteadas
 		while(jafoi[i] == 1)
 			i++;
-		if(i == edges)
+		if(i >= edges)
 			break;
+
+		//printf("VALOR DE i %d\n", i);
 
 		A = a[i]; //origem no dataflow
 		B = b[i]; //destino no dataflow
