@@ -260,6 +260,7 @@ int main(){
 			m_copia[u][v] = m[u][v];
 
 	for(i=0; i<edges; i++){
+		int flag_multicast = 0;
 		//Não refazer dijkstra para arestas ja roteadas
 		while(jafoi[i] == 1)
 			i++;
@@ -273,8 +274,10 @@ int main(){
 
 		for(int u=0; u<V; u++){
 			for(int v=0; v<V; v++){
-				if(ORIGEM_DF[u][v] == A)
+				if(ORIGEM_DF[u][v] == A){
 					m[u][v] = 100;
+					flag_multicast = 1;
+				}
 			}
 		}		
 
@@ -321,23 +324,25 @@ int main(){
 
 				//marca ALU como usada
 				//printf("%d %d %d \n",ALUREG[destino], BYPASS[destino], destino);
-				if(destino == B){
-					printf("dest e B \n");
-					if(ALUREG[destino] == 1){
-						printf("DEU RUIM B\n");
+				if(!flag_multicast){
+					if(destino == B){
+						printf("dest e B \n");
+						if(ALUREG[destino] == 1){
+							printf("DEU RUIM B\n");
+							FLAG = 1;
+							break;
+						}else
+							ALU[destino] = 1;
+					}else if(BYPASS[destino] == 0){
+						BYPASS[destino] = 1;
+					}else if(ALUREG[destino] == 0 && ALU[destino] == 0){
+						ALUREG[destino] = 1;
+					}
+					else{
+						printf("DEU RUIM bypassXalureg\n");
 						FLAG = 1;
 						break;
-					}else
-						ALU[destino] = 1;
-				}else if(BYPASS[destino] == 0){
-					BYPASS[destino] = 1;
-				}else if(ALUREG[destino] == 0){
-					ALUREG[destino] = 1;
-				}
-				else{
-					printf("DEU RUIM bypassXalureg\n");
-					FLAG = 1;
-					break;
+					}
 				}
 					
 
@@ -350,11 +355,13 @@ int main(){
 				ORIGEM_DF[origem][destino] = A;
 				//printf("A = %d\n", A);
 
-				for(int u=0; u<V; u++){
-					for(int v=0; v<V; v++){
-						//essa arestas sempre sao arestas usadas
-						if(ORIGEM_DF[u][v] == A)
-							m[u][v] = 0;
+				if(flag_multicast){
+					for(int u=0; u<V; u++){
+						for(int v=0; v<V; v++){
+							//essa arestas sempre sao arestas usadas
+							if(ORIGEM_DF[u][v] == A)
+								m[u][v] = 0;
+						}
 					}
 				}
 
