@@ -288,7 +288,7 @@ int main(){
 		int cont = printPath(parent, B);
 		printf("\n");
 
-		printf("%d \n",cont);
+		printf("dist = %d \n",cont);
 		//PASSO2: faz roteamento não-trivial
 		if(cont != 1){	
 			j = 0;
@@ -350,7 +350,8 @@ int main(){
 
 				//aumenta peso das arestas que levam a esse mesmo destino
 				for(int aux=0; aux<V;aux++)
-					m[aux][destino]++;				 
+					if(m[aux][destino] != 0)
+						m[aux][destino]++;				 
 				//remove aresta usada
 				m[origem][destino] = 0;
 				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota

@@ -1,0 +1,131 @@
+A11 B10
+1 
+origem=11 dest=10
+
+A10 B10
+0 
+A10 B15
+1 
+origem=10 dest=15
+
+A15 B20
+1 
+origem=15 dest=20
+
+A15 B16
+1 
+origem=15 dest=16
+
+A16 B21
+1 
+origem=16 dest=21
+
+A21 B22
+1 
+origem=21 dest=22
+
+A21 B17
+2 
+A17 B12
+1 
+origem=17 dest=12
+
+A17 B17
+0 
+A20 B23
+5 
+A20 B5
+3 
+A5 B0
+1 
+origem=5 dest=0
+
+A0 B6
+2 
+A0 B1
+1 
+origem=0 dest=1
+
+A6 B2
+2 
+A6 B17
+3 
+A23 B18
+1 
+origem=23 dest=18
+
+A18 B13
+1 
+origem=18 dest=13
+
+A18 B17
+1 
+origem=18 dest=17
+
+A7 B15
+4 
+A7 B21
+4 
+INICIA PASSO 2
+A10 B10
+dist = 0 
+
+A21 B17
+dist = 2 
+origem=22 dest=17
+origem=21 dest=22
+
+A17 B17
+dist = 0 
+
+A20 B23
+dist = 5 
+origem=18 dest=23
+dest e B 
+origem=17 dest=18
+origem=16 dest=17
+origem=21 dest=16
+origem=20 dest=21
+
+A20 B5
+dist = 3 
+origem=10 dest=5
+origem=15 dest=10
+origem=20 dest=15
+
+A0 B6
+dist = 2 
+origem=1 dest=6
+origem=0 dest=1
+
+A6 B2
+dist = 2 
+origem=7 dest=2
+dest e B 
+origem=6 dest=7
+
+A6 B17
+dist = 3 
+origem=12 dest=17
+origem=11 dest=12
+origem=6 dest=11
+
+A7 B15
+dist = 4 
+origem=10 dest=15
+dest e B 
+origem=5 dest=10
+origem=6 dest=5
+origem=7 dest=6
+
+A7 B21
+dist = 8 
+origem=22 dest=21
+origem=23 dest=22
+origem=24 dest=23
+origem=19 dest=24
+origem=14 dest=19
+origem=9 dest=14
+origem=8 dest=9
+origem=7 dest=8
+
