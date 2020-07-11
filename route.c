@@ -23,8 +23,10 @@ int printPath(int parent[], int j)
 	while(parent[j] != -1){
 		contador ++;
 		//printf("%d ", j);
+		//printf("%d\n",contador);
 		j = parent[j];
 	}
+
 	return contador;
 } 
 
@@ -53,7 +55,7 @@ int printSolution(int dist[], int n, int parent[], int dest)
 	///} 
 } 
 
-void dijkstra(int graph[V][V], int src, int dest, int * parent) 
+int dijkstra(int graph[V][V], int src, int dest, int * parent) 
 { 
 	int dist[V]; 
 	int sptSet[V]; 
@@ -85,6 +87,8 @@ void dijkstra(int graph[V][V], int src, int dest, int * parent)
 	// print the constructed 
 	// distance array 
 //	printSolution(dist, V, parent, dest); 
+	//printf("DSITAANCIAA %d\n",dist[dest]);
+	return dist[dest];
 } 
 
 int main(){
@@ -200,7 +204,7 @@ int main(){
 		int cont = printPath(parent, B);
 		printf("\n");
 
-		printf("%d \n",cont);
+		//printf("%d \n",cont);
 		//PASSO1: faz roteamento trivial
 		if(cont == 1){	
 			jafoi[i] = 1;		
@@ -256,6 +260,7 @@ int main(){
 		}
 
 	}
+
 	printf("INICIA PASSO 2\n");
 	for(int u=0; u<V; u++)
 		for(int v=0; v<V; v++)
@@ -264,8 +269,9 @@ int main(){
 	for(i=0; i<edges; i++){
 		int flag_multicast = 0;
 		//Não refazer dijkstra para arestas ja roteadas
-		while(jafoi[i] == 1)
+		while(jafoi[i] == 1){ //|| a[i] == b[i]
 			i++;
+		}
 		if(i >= edges)
 			break;
 
@@ -284,22 +290,38 @@ int main(){
 		}		
 
 		printf("A%d B%d",A,B);
-		dijkstra(m, A, B, parent);
+		//printf("chaama dijkistra\n");
+		int ret = dijkstra(m, A, B, parent);
+		/*for(int o=0; o<V; o++){
+		for(int p=0; p<V; p++){
+			printf("%3d ",m[o][p]);
+		}
+		printf("\n");
+		}*/
+		printf("\n");
+		if(ret == 2147483647){
+			printf("distancia infinita no dijkstra\n");
+			printf("DEU RUIM\n");
+			break;
+		}
+
 		int cont = printPath(parent, B);
+		//printf("conta \n");
 		printf("\n");
 
-		printf("dist = %d \n",cont);
+		//printf("dist = %d \n",cont);
 		//PASSO2: faz roteamento não-trivial
 		if(cont != 1){	
 			j = 0;
 			while(1){
-				if(j ==0 ){
+				if(j == 0){
 					destino = B;
 				}else{
 					destino = origem;
 				}
 
 				origem = parent[destino];
+
 				if(origem == -1)
 					break;
 
@@ -370,9 +392,10 @@ int main(){
 
 				j++;		
 			}
+			//printf("SAI ");
+			//printf("%d \n",FLAG);
 			if(FLAG == 1)
 				break;
-			printf("\n");
 		}
 
 	}
