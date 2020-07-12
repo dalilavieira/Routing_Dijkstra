@@ -14,6 +14,27 @@ int grid[] = {1, 4, 2, 3, 255, 8, 5, 6, 255, 10, 9, 7, 255, 255, 255, 255};
 int e_a[] = {1, 2, 2, 3, 3, 7, 6, 5, 5, 4, 8, 9};
 int e_b[] = {4, 4, 5, 5, 6, 6, 9, 9, 8, 8, 10, 10};*/
 
+void bubble(int *ordena, int*a, int *b){
+	int aux1, aux2, aux3;
+	for(int u=0; u<edges; u++){
+		for(int v=0; v<edges; v++){
+			if(ordena[u] < ordena[v]){
+				aux1 = ordena[v];
+				ordena[v] = ordena[u];
+				ordena[u] =  aux1;
+
+				aux2 = a[v];
+				a[v] = a[u];
+				a[u] = aux2;
+
+				aux3 = b[v];
+				b[v] = b[u];
+				b[u] = aux3;
+			}
+		}
+	}
+}
+
 int printPath(int parent[], int j) 
 { 
 //	PTAM += 1;
@@ -271,25 +292,11 @@ int main(){
 
 	}
 
+	//for(int v=0; v<edges; v++)
+	//	printf("ORDENAA%d \n ", ordena[v]);
+
 	//ordena as arestas para o passo 2
-	int aux1, aux2, aux3;
-	for(int u=0; u<edges; u++){
-		for(int v=0; v<edges; v++){
-			if(ordena[u] < ordena[v]){
-				aux1 = ordena[v];
-				ordena[v] = ordena[u];
-				ordena[u] =  aux1;
-
-				aux2 = a[v];
-				a[v] = a[u];
-				a[u] = aux2;
-
-				aux3 = b[v];
-				b[v] = b[u];
-				b[u] = aux3;
-			}
-		}
-	}
+	bubble(ordena, a, b);	
 
 	for(int v=0; v<edges; v++)
 		printf("ORDENAA%d \n ", ordena[v]);
@@ -300,6 +307,11 @@ int main(){
 			m_copia[u][v] = m[u][v];
 
 	for(i=0; i<edges; i++){
+		//ordena as arestas para o passo 2
+		bubble(ordena, a, b);	
+		for(int v=0; v<edges; v++)
+			printf("ORDENAA%d \n ", ordena[v]);	
+	
 		int flag_multicast = 0;
 		//Não refazer dijkstra para arestas ja roteadas
 		while(jafoi[i] == 1){ //|| a[i] == b[i]
@@ -360,6 +372,7 @@ int main(){
 		}
 
 		int cont = printPath(parent, B);
+		ordena[i] = cont;
 		//printf("conta \n");
 		printf("\n");
 
