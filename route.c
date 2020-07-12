@@ -92,6 +92,7 @@ int dijkstra(int graph[V][V], int src, int dest, int * parent)
 } 
 
 int main(){
+	int ordena[edges];
 	int FLAG = 0;
 	int parent[V];
 
@@ -200,10 +201,19 @@ int main(){
 		B = b[i]; //destino no dataflow
 
 		printf("A%d B%d",A,B);
-		dijkstra(m, A, B, parent);
-		int cont = printPath(parent, B);
+		int ret = dijkstra(m, A, B, parent);
 		printf("\n");
 
+		printf("ret %d",ret);
+		if(ret > V*1000 || ret < -V*1000 ){
+			printf("distancia infinita no dijkstra\n");
+			printf("DEU RUIM\n");
+			//break;
+			return 1;
+		}
+
+		int cont = printPath(parent, B);
+		ordena[i] = cont;
 		//printf("%d \n",cont);
 		//PASSO1: faz roteamento trivial
 		if(cont == 1){	
@@ -261,6 +271,29 @@ int main(){
 
 	}
 
+	//ordena as arestas para o passo 2
+	int aux1, aux2, aux3;
+	for(int u=0; u<edges; u++){
+		for(int v=0; v<edges; v++){
+			if(ordena[u] < ordena[v]){
+				aux1 = ordena[v];
+				ordena[v] = ordena[u];
+				ordena[u] =  aux1;
+
+				aux2 = a[v];
+				a[v] = a[u];
+				a[u] = aux2;
+
+				aux3 = b[v];
+				b[v] = b[u];
+				b[u] = aux3;
+			}
+		}
+	}
+
+	for(int v=0; v<edges; v++)
+		printf("ORDENAA%d \n ", ordena[v]);
+
 	printf("INICIA PASSO 2\n");
 	for(int u=0; u<V; u++)
 		for(int v=0; v<V; v++)
@@ -290,8 +323,9 @@ int main(){
 		}		
 
 		printf("A%d B%d",A,B);
-		//printf("chaama dijkistra\n");
+		printf("chaama dijkistra\n");
 		int ret = dijkstra(m, A, B, parent);
+		printf("ret %d\n", ret);
 		/*for(int o=0; o<V; o++){
 		for(int p=0; p<V; p++){
 			printf("%3d ",m[o][p]);
@@ -299,10 +333,30 @@ int main(){
 		printf("\n");
 		}*/
 		printf("\n");
-		if(ret == 2147483647){
-			printf("distancia infinita no dijkstra\n");
-			printf("DEU RUIM\n");
-			break;
+		if(ret > V*1000 || ret < -V*1000 ){
+			if(!flag_multicast){
+				printf("distancia infinita no dijkstra\n");
+				printf("DEU RUIM\n");
+				break;
+			}else{
+				flag_multicast = 0;
+				for(int u=0; u<V; u++){
+					for(int v=0; v<V; v++){
+						//essa arestas sempre sao arestas usadas
+						if(ORIGEM_DF[u][v] == A)
+							m[u][v] = 0;
+					}
+				}
+				
+				printf("chaama dijkistra denovo\n");
+				int ret = dijkstra(m, A, B, parent);
+				printf("ret %d\n", ret);
+				if(ret > V*1000 || ret < -V*1000 ){
+					printf("distancia infinita no dijkstra\n");
+					printf("DEU RUIM\n");
+					break;
+				}
+			}
 		}
 
 		int cont = printPath(parent, B);

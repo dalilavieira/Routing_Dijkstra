@@ -1,7 +1,9 @@
 import sys
 import math
 
-arq_nome = "accumulate_0.in"#input()
+#arq_nome = "accumulate_0.in"#input()
+#arq_nome = "sum_0.in"
+arq_nome = "poly8_0.in"
 arquivo = open(arq_nome, 'r')
 edges = []
 for linha in arquivo:
@@ -20,7 +22,7 @@ arquivo.close()
 print(len(edges)-1)#a primeira linha também é salva(conta edges)
 print(edges)
 
-arq_nome2 = "verilog_accumulate.out"#input()
+arq_nome2 = "verilog_poly8.out"#input()
 arquivo2 = open(arq_nome2, 'r')
 grids = []
 for linha in arquivo2:

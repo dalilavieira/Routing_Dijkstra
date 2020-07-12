@@ -8,4 +8,3 @@ do
 	./a.out > $i
 	python file2.py $i
 done
-
