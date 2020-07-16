@@ -198,6 +198,18 @@ int main(){
 				m[i*TAM+j][i*TAM+(j+1)] = peso; 
 				m[i*TAM+(j+1)][i*TAM+j] = peso; 
 			}
+			if(i<TAM-2 & j<TAM-2){
+				m[i*TAM+j][i*TAM+(j+2)] = peso; 
+				m[i*TAM+(j+2)][i*TAM+j] = peso; 
+				m[i*TAM+j][(i+2)*TAM+j] = peso; 
+				m[(i+2)*TAM+j][i*TAM+j] = peso; 
+			}else if(i<TAM-2){
+				m[i*TAM+j][(i+2)*TAM+j] = peso; 
+				m[(i+2)*TAM+j][i*TAM+j] = peso; 
+			}else if(j<TAM-2){
+				m[i*TAM+j][i*TAM+(j+2)] = peso; 
+				m[i*TAM+(j+2)][i*TAM+j] = peso; 
+			}
 		}
 	}
 
