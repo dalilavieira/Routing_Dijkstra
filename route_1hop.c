@@ -304,14 +304,25 @@ int main(){
 
 	}
 
-	//for(int v=0; v<edges; v++)
+//	for(int v=0; v<edges; v++)
 	//	printf("ORDENAA%d \n ", ordena[v]);
 
 	//ordena as arestas para o passo 2
 	bubble(ordena, a, b);	
+	for(int h=0; h<edges; h++){
+		printf("%d\n", ordena[h]);
+	}	
+	bubble(ordena, a, b);
+	printf("next\n");
+	for(int h=0; h<edges; h++){
+		printf("%d\n", ordena[h]);
+	}
 
-	for(int v=0; v<edges; v++)
-		printf("ORDENAA%d \n ", ordena[v]);
+	//Ordena uma vez
+	bubble(ordena, a, b);	
+
+	//for(int v=0; v<edges; v++)
+	//	printf("ORDENAA%d \n ", ordena[v]);
 
 	printf("INICIA PASSO 2\n");
 	for(int u=0; u<V; u++)
@@ -321,8 +332,8 @@ int main(){
 	for(i=0; i<edges; i++){
 		//ordena as arestas 
 		bubble(ordena, a, b);	
-		for(int v=0; v<edges; v++)
-			printf("ORDENAA%d \n ", ordena[v]);	
+		//for(int v=0; v<edges; v++)
+		//	printf("ORDENAA%d \n ", ordena[v]);	
 	
 		int flag_multicast = 0;
 		//Não refazer dijkstra para arestas ja roteadas

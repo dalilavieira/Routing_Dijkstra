@@ -1,0 +1,147 @@
+$date
+	Thu Jul 16 13:37:49 2020
+$end
+$version
+	Icarus Verilog
+$end
+$timescale
+	1s
+$end
+$scope module test $end
+$var wire 32 ! out [31:0] $end
+$var reg 1 " clk $end
+$var reg 1 # reset $end
+$scope module d1 $end
+$var wire 1 " clk $end
+$var wire 1 # reset $end
+$var reg 32 $ dest [31:0] $end
+$var reg 32 % min [31:0] $end
+$var reg 32 & out [31:0] $end
+$var reg 32 ' src [31:0] $end
+$var reg 32 ( u [31:0] $end
+$var integer 32 ) i [31:0] $end
+$var integer 32 * v [31:0] $end
+$upscope $end
+$upscope $end
+$enddefinitions $end
+#0
+$dumpvars
+bx *
+b100000 )
+bx (
+b0 '
+bx &
+b100110001001011001111111 %
+b11 $
+0#
+0"
+bx !
+$end
+#1
+b101 !
+b101 &
+b11110 (
+b100110001001011001111111 %
+b11111 *
+b11111 )
+1"
+#2
+0"
+#3
+b11110 (
+b11111 *
+b11111 )
+1"
+#4
+0"
+#5
+b11110 (
+b11111 *
+b11111 )
+1"
+#6
+0"
+#7
+b11110 (
+b11111 *
+b11111 )
+1"
+#8
+0"
+#9
+b11110 (
+b11111 *
+b11111 )
+1"
+#10
+0"
+#11
+b11110 (
+b11111 *
+b11111 )
+1"
+#12
+0"
+#13
+b11110 (
+b11111 *
+b11111 )
+1"
+#14
+0"
+#15
+b11110 (
+b11111 *
+b11111 )
+1"
+#16
+0"
+#17
+b11110 (
+b11111 *
+b11111 )
+1"
+#18
+0"
+#19
+b11110 (
+b11111 *
+b11111 )
+1"
+#20
+0"
+#21
+b11110 (
+b11111 *
+b11111 )
+1"
+#22
+0"
+#23
+b11110 (
+b11111 *
+b11111 )
+1"
+#24
+0"
+#25
+b11110 (
+b11111 *
+b11111 )
+1"
+#26
+0"
+#27
+b11110 (
+b11111 *
+b11111 )
+1"
+#28
+0"
+#29
+b11110 (
+b11111 *
+b11111 )
+1"
+#30
+0"

@@ -14,8 +14,8 @@ int grid[] = {1, 4, 2, 3, 255, 8, 5, 6, 255, 10, 9, 7, 255, 255, 255, 255};
 int e_a[] = {1, 2, 2, 3, 3, 7, 6, 5, 5, 4, 8, 9};
 int e_b[] = {4, 4, 5, 5, 6, 6, 9, 9, 8, 8, 10, 10};*/
 
-void bubble(int *ordena, int*a, int *b){
-	int aux1, aux2, aux3;
+void bubble(int *ordena, int*a, int *b, int *jafoi){
+	int aux1, aux2, aux3, aux4;
 	for(int u=0; u<edges; u++){
 		for(int v=0; v<edges; v++){
 			if(ordena[u] < ordena[v]){
@@ -30,6 +30,10 @@ void bubble(int *ordena, int*a, int *b){
 				aux3 = b[v];
 				b[v] = b[u];
 				b[u] = aux3;
+		
+				aux4 = jafoi[v];
+				jafoi[v] = jafoi[u];
+				jafoi[u] = aux4;
 			}
 		}
 	}
@@ -65,7 +69,7 @@ int minDistance(int dist[], int sptSet[])
 	return min_index; 
 } 
 
-int printSolution(int dist[], int n, int parent[], int dest) 
+/*int printSolution(int dist[], int n, int parent[], int dest) 
 { 
 	int src = 1; 
 	printf("Vertex\t Distance\tPath"); 
@@ -74,7 +78,7 @@ int printSolution(int dist[], int n, int parent[], int dest)
 		printf("\n%d -> %d \t\t %d\t\t%d ", src, dest, dist[dest], src); 
 		//printPath(parent, dest); 
 	///} 
-} 
+} */
 
 int dijkstra(int graph[V][V], int src, int dest, int * parent) 
 { 
@@ -153,7 +157,7 @@ int main(){
 		for (int i=0; i<TAM*TAM; i++){
 			if(e_a[j] == grid[i]){
 				a[j] = i;
-				//printf("%d\n", i);
+				//printf("II %d\n", e_ a[j]);
 			}
 		}
 	}
@@ -162,10 +166,18 @@ int main(){
 		for (int i=0; i<TAM*TAM; i++){
 			if(e_b[j] == grid[i]){
 				b[j] = i;
-				//printf("%d\n", i);
+				//printf("jj %d\n", i);
 			}
 		}
-	}	
+	}
+
+	//TODO VERTICE USA ALU
+	for (int j=0; j<edges; j++){
+		ALU[b[j]] = 1;
+		ALU[a[j]] = 1;
+		printf("%d %d\n", b[j], a[j]);
+	}
+	
 
 
 	for(i=0; i<V; i++){
@@ -235,7 +247,7 @@ int main(){
 
 		int cont = printPath(parent, B);
 		ordena[i] = cont;
-		//printf("%d \n",cont);
+		printf("\n\n %d %d %d \n",cont, A, B);
 		//PASSO1: faz roteamento trivial
 		if(cont == 1){	
 			jafoi[i] = 1;		
@@ -296,10 +308,10 @@ int main(){
 	//	printf("ORDENAA%d \n ", ordena[v]);
 
 	//ordena as arestas para o passo 2
-	bubble(ordena, a, b);	
+	bubble(ordena, a, b, jafoi);	
 
-	for(int v=0; v<edges; v++)
-		printf("ORDENAA%d \n ", ordena[v]);
+//	for(int v=0; v<edges; v++)
+//		printf("ORDENAA%d \n ", ordena[v]);
 
 	printf("INICIA PASSO 2\n");
 	for(int u=0; u<V; u++)
@@ -308,19 +320,20 @@ int main(){
 
 	for(i=0; i<edges; i++){
 		//ordena as arestas 
-		bubble(ordena, a, b);	
-		for(int v=0; v<edges; v++)
-			printf("ORDENAA%d \n ", ordena[v]);	
+		bubble(ordena, a, b, jafoi);	
+//		for(int v=0; v<edges; v++)
+//			printf("ORDENAA%d \n ", ordena[v]);	
 	
 		int flag_multicast = 0;
 		//Não refazer dijkstra para arestas ja roteadas
+		printf("\nAi %d Bi %d foi %d i%d \n",a[i],b[i],jafoi[i], i);
 		while(jafoi[i] == 1){ //|| a[i] == b[i]
 			i++;
 		}
 		if(i >= edges)
 			break;
 
-		//printf("VALOR DE i %d\n", i);
+		printf("VALOR DE i %d a%d b%d jafoi%d\n", i,a[i],b[i],jafoi[i]);
 
 		A = a[i]; //origem no dataflow
 		B = b[i]; //destino no dataflow
