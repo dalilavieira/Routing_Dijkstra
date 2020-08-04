@@ -238,7 +238,7 @@ int main(){
 
 	int peso = 100;
 	#pragma omp parallel for 
-	for(i=0; i<TAM; i++){
+for(i=0; i<TAM; i++){
 		for(j=0; j<TAM; j++){
 			if(i<TAM-1 & j<TAM-1){
 				m[i*TAM+j][i*TAM+(j+1)] = peso; 
@@ -251,6 +251,18 @@ int main(){
 			}else if(j<TAM-1){
 				m[i*TAM+j][i*TAM+(j+1)] = peso; 
 				m[i*TAM+(j+1)][i*TAM+j] = peso; 
+			}
+			if(i<TAM-2 & j<TAM-2){
+				m[i*TAM+j][i*TAM+(j+2)] = peso; 
+				m[i*TAM+(j+2)][i*TAM+j] = peso; 
+				m[i*TAM+j][(i+2)*TAM+j] = peso; 
+				m[(i+2)*TAM+j][i*TAM+j] = peso; 
+			}else if(i<TAM-2){
+				m[i*TAM+j][(i+2)*TAM+j] = peso; 
+				m[(i+2)*TAM+j][i*TAM+j] = peso; 
+			}else if(j<TAM-2){
+				m[i*TAM+j][i*TAM+(j+2)] = peso; 
+				m[i*TAM+(j+2)][i*TAM+j] = peso; 
 			}
 		}
 	}
