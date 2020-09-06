@@ -46,10 +46,14 @@ void bubble(int *ordena, int*a, int *b, int *jafoi){
 
 int printPath(int parent[], int j) 
 { 
+//	PTAM += 1;
+	// Base Case : If j is source 
 	int contador = 0;
 
 	while(parent[j] != -1){
 		contador ++;
+		//printf("%d ", j);
+		//printf("%d\n",contador);
 		j = parent[j];
 	}
 
@@ -69,6 +73,17 @@ int minDistance(int dist[], int sptSet[])
 
 	return min_index; 
 } 
+
+/*int printSolution(int dist[], int n, int parent[], int dest) 
+{ 
+	int src = 1; 
+	printf("Vertex\t Distance\tPath"); 
+	//for (int i = 1; i < V; i++) 
+	//{ 
+		printf("\n%d -> %d \t\t %d\t\t%d ", src, dest, dist[dest], src); 
+		//printPath(parent, dest); 
+	///} 
+} */
 
 int dijkstra(int graph[V][V], int src, int dest, int * parent) 
 { 
@@ -113,7 +128,11 @@ int main(){
 
 	int i,j;
 	int m[V][V];
-	//int m_copia[V][V];
+
+
+	//E2
+	//int e_a[] = {1, 2, 3, 4, 5, 6, 9};
+	//int e_b[] = {6, 6, 6, 6, 7, 5, 5};
 
 	int a[edges], b[edges];
 	int A, B;
@@ -128,7 +147,15 @@ int main(){
 	int BYPASS[V];
 	int ORIGEM_DF[V][V];
 
-	//Pre-processamento: Inicializa matriz de placement
+
+	//PRIMEIRO EXEMPLO
+	/*int a[] = {0, 3, 1, 5, 2};
+	int b[] = {1, 1, 2, 2, 8};*/
+	
+	//matriz resultado do placement
+	//E2
+	//int grid[] = {1, 2, 8, 3, 6, 4, 9, 5, 7};
+
 	for (int j=0; j<TAM; j++){
 		for (int i=0; i<TAM; i++){
 			grid[j*TAM+i] = 255;
@@ -137,16 +164,15 @@ int main(){
 		}
 	}
 	
-	//Imprime grid 20x20
-	/*for (int j=0; j<TAM; j++){
+	for (int j=0; j<TAM; j++){
 		for (int i=0; i<TAM; i++){
 			printf("%d ",grid[j*TAM+i]);
 
 		}
 		printf("\n");
-	}*/
+	}
 
-	//Pre-processamento: forma vetor de vertices de origem
+	//forma vetor de vertices de origem
 	for (int j=0; j<edges; j++){
 		for (int i=0; i<TAM*TAM; i++){
 			if(e_a[j] == grid[i]){
@@ -165,7 +191,7 @@ int main(){
 		}
 	}
 
-	//Pre-processamento: Marca uso de ALU para todo vertice mapeado no CGRA
+	//TODO VERTICE USA ALU
 	for (int j=0; j<edges; j++){
 		ALU[b[j]] = 1;
 		ALU[a[j]] = 1;
@@ -173,21 +199,21 @@ int main(){
 	}
 	
 
-	//Inicializacao
+
 	for(i=0; i<V; i++){
-	//	ALU[i] = 0;
+		//indice_e[i] = 0;
+		//indice_s[i] = 0;
+		//ALU[i] = 0;
 		ALUREG[i] = 0;
 		BYPASS[i] = 0;
 		//printf("BYPASS %d = %d", i, BYPASS[i]);
 		for(j=0; j<V; j++){
 			m[i][j] = 0;
-			//m_copia[i][j] = 0;
 			ORIGEM_DF[i][j] = -1;
 			//printf("%d",m);
 		}
 	}
 
-	//Pre-processamento: Inicializacao arestas da CGRA
 	int peso = 100;
 	for(i=0; i<TAM; i++){
 		for(j=0; j<TAM; j++){
@@ -214,261 +240,211 @@ int main(){
 	}
 	printf("\n");*/
 
-	//Inicializa JAFOI
 	int jafoi[edges];
 	for(i=0; i<edges; i++)
 		jafoi[i] = 0;
 
-	//PASSO1: roteia arestas do placement e monta vetor para ordenacao
-	//for(i=0; i<edges; i++){
-	int estado = 0;
-	int flag = 0;
-	int cont = 0;
-	int flag_multicast = 0;
-	i = 0;
-	while(1){
-		if(flag == 1)
-			break;
-		switch(estado){
-			case 0:
-				A = a[i]; //origem no dataflow
-				B = b[i]; //destino no dataflow
-				estado = 1;
-			break;
-			case 1:
-				printf("A%d B%d",A,B);
-				int ret = dijkstra(m, A, B, parent);
-				printf("\n");
+	for(i=0; i<edges; i++){
+		A = a[i]; //origem no dataflow
+		B = b[i]; //destino no dataflow
 
-				printf("ret %d",ret);
-				if(ret > V*1000 || ret < -V*1000 ){
-					printf("distancia infinita no dijkstra\n");
-					printf("DEU RUIM\n");
-					//break;
-					return 1;
+		printf("A%d B%d",A,B);
+		int ret = dijkstra(m, A, B, parent);
+		printf("\n");
+
+		printf("ret %d",ret);
+		if(ret > V*1000 || ret < -V*1000 ){
+			printf("distancia infinita no dijkstra\n");
+			printf("DEU RUIM\n");
+			//break;
+			return 1;
+		}
+
+		int cont = printPath(parent, B);
+		ordena[i] = cont;
+		printf("\n\n %d %d %d \n",cont, A, B);
+		//PASSO1: faz roteamento trivial
+		if(cont == 1){	
+			jafoi[i] = 1;		
+			j = 0;
+			while(1){
+				if(j ==0 ){
+					destino = B;
+				}else{
+					destino = origem;
 				}
-				estado = 2;
-			break;
-			case 2:
-				cont = printPath(parent, B);
-				ordena[i] = cont;
-				printf("\n\n %d %d %d \n",cont, A, B);
-				//PASSO1: faz roteamento trivial
-				if(cont == 1){
-					jafoi[i] = 1;	//vai ser outro estado	
-					j = 0;
-					estado = 3;
-				}else 
-					estado = 4;
-			break;
-			//if(cont == 1){
-			case 3:	
-				//while(1){
-					if(j ==0 ){
-						destino = B;
-					}else{
-						destino = origem;
-					}
 
-					origem = parent[destino];
-					if(origem == -1){
-						estado = 4;
-						break;
-					}
-
-					printf("origem=%d dest=%d\n",origem,destino);
-
-					if(destino == origem-1){
-						entradas[destino][0] = origem;
-						saidas[origem][2] = destino;
-					}else if(destino == origem-TAM){
-						entradas[destino][1] = origem; 
-						saidas[origem][3] = destino; 
-					}else if(destino == origem+1){
-						entradas[destino][2] = origem; 
-						saidas[origem][0] = destino; 
-					}else if(destino == origem+TAM){
-						entradas[destino][3] = origem;
-						saidas[origem][1] = destino;  
-					}else{
-						printf("DEU RUIM\n");
-						FLAG = 1;
-						//exit(1);
-						estado = 4;
-						break;
-					}
-					//aumenta peso das arestas que levam a esse mesmo destino, SE != ZERO
-					for(int aux=0; aux<V;aux++)
-						if(m[aux][destino] != 0)
-							m[aux][destino]++;
-					//marca ALU como usada
-					ALU[destino] = 1; 
-					//remove aresta usada
-					//printf("\n od %d %d\n",origem,destino);
-					m[origem][destino] = 0;
-					//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
-					ORIGEM_DF[origem][destino] = A;
-
-					j++;		
-				//}
-				//estado = 4;
-			break;
-			case 4:
-				if(FLAG == 1)
+				origem = parent[destino];
+				if(origem == -1)
 					break;
-				printf("\n");
-				i++;
-				if (i < edges)
-					estado = 0;
-				else
-					flag = 1;
-			break;
 
-		}//endswitch
+				printf("origem=%d dest=%d\n",origem,destino);
 
-	}	
-	
-	flag = 0;
-	estado = 5;
+				if(destino == origem-1){
+					entradas[destino][0] = origem;
+					saidas[origem][2] = destino;
+				}else if(destino == origem-TAM){
+					entradas[destino][1] = origem; 
+					saidas[origem][3] = destino; 
+				}else if(destino == origem+1){
+					entradas[destino][2] = origem; 
+					saidas[origem][0] = destino; 
+				}else if(destino == origem+TAM){
+					entradas[destino][3] = origem;
+					saidas[origem][1] = destino;  
+				}else{
+					printf("DEU RUIM\n");
+					FLAG = 1;
+					//exit(1);
+					break;
+				}
+				//aumenta peso das arestas que levam a esse mesmo destino, SE != ZERO
+				for(int aux=0; aux<V;aux++)
+					if(m[aux][destino] != 0)
+						m[aux][destino]++;
+				//marca ALU como usada
+				ALU[destino] = 1; 
+				//remove aresta usada
+				//printf("\n od %d %d\n",origem,destino);
+				m[origem][destino] = 0;
+				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
+				ORIGEM_DF[origem][destino] = A;
+
+				j++;		
+			}
+			if(FLAG == 1)
+				break;
+			printf("\n");
+		}
+
+	}
+
+	//for(int v=0; v<edges; v++)
+	//	printf("ORDENAA%d \n ", ordena[v]);
+
+	//ordena as arestas para o passo 2
+	bubble(ordena, a, b, jafoi);	
+
+//	for(int v=0; v<edges; v++)
+//		printf("ORDENAA%d \n ", ordena[v]);
+
 	printf("INICIA PASSO 2\n");
-	//for(i=0; i<edges; i++){
-	i = 0;
-	j = 0;
-	int ret;
 
 	for(i=0; i<edges; i++){
+		//ordena as arestas 
+		bubble(ordena, a, b, jafoi);	
+//		for(int v=0; v<edges; v++)
+//			printf("ORDENAA%d \n ", ordena[v]);	
+	
+		//Não refazer dijkstra para arestas ja roteadas
+		printf("\nAi %d Bi %d foi %d i%d \n",a[i],b[i],jafoi[i], i);
+		while(jafoi[i] == 1){ //|| a[i] == b[i]
+			i++;
+		}
+		if(i >= edges)
+			break;
 
-			//ordena as arestas 
-			bubble(ordena, a, b, jafoi);
-			bubble(ordena, a, b, jafoi);	
-	//		for(int v=0; v<edges; v++)
-	//			printf("ORDENAA%d \n ", ordena[v]);	
-		
-			flag_multicast = 0;
-			//Não refazer dijkstra para arestas ja roteadas
-			printf("\nAi %d Bi %d foi %d i%d \n",a[i],b[i],jafoi[i], i);
-			while(jafoi[i] == 1){ //|| a[i] == b[i]
-				i++;
-			}
-			if(i >= edges)
-				break;
+		printf("VALOR DE i %d a%d b%d jafoi%d\n", i,a[i],b[i],jafoi[i]);
 
-			printf("VALOR DE i %d a%d b%d jafoi%d\n", i,a[i],b[i],jafoi[i]);
+		A = a[i]; //origem no dataflow
+		B = b[i]; //destino no dataflow
 
-			A = a[i]; //origem no dataflow
-			B = b[i]; //destino no dataflow
+		printf("A%d B%d",A,B);
+		printf("chaama dijkistra\n");
+		int ret = dijkstra(m, A, B, parent);
+		printf("ret %d\n", ret);
 
-			for(int u=0; u<V; u++){
-				for(int v=0; v<V; v++){
-					if(ORIGEM_DF[u][v] == A){
-						m[u][v] = 100;
-						flag_multicast = 1;
-					}
+		printf("\n");
+		if(ret > V*1000 || ret < -V*1000 ){
+			printf("distancia infinita no dijkstra\n");
+			printf("DEU RUIM\n");
+			break;
+		}
+
+		int cont = printPath(parent, B);
+		ordena[i] = cont;
+		//printf("conta \n");
+		printf("\n");
+
+		//printf("dist = %d \n",cont);
+		//PASSO2: faz roteamento não-trivial
+		if(cont != 1){	
+			j = 0;
+			while(1){
+				if(j == 0){
+					destino = B;
+				}else{
+					destino = origem;
 				}
-			}		
 
-			printf("A%d B%d",A,B);
-			printf("chaama dijkistra\n");
-			ret = dijkstra(m, A, B, parent);
-			printf("ret %d\n", ret);
+				origem = parent[destino];
 
-			printf("\n");
-			if(ret > V*1000 || ret < -V*1000 ){
-					printf("distancia infinita no dijkstra\n");
+				if(origem == -1)
+					break;
+
+				printf("origem=%d dest=%d\n",origem,destino);
+
+				if(destino == origem-1){
+					entradas[destino][0] = origem;
+					saidas[origem][2] = destino;
+				}else if(destino == origem-TAM){
+					entradas[destino][1] = origem; 
+					saidas[origem][3] = destino; 
+				}else if(destino == origem+1){
+					entradas[destino][2] = origem; 
+					saidas[origem][0] = destino; 
+				}else if(destino == origem+TAM){
+					entradas[destino][3] = origem;
+					saidas[origem][1] = destino;  
+				}else{
 					printf("DEU RUIM\n");
+					FLAG = 1;
+					//exit(1);
 					break;
-			}
-
-			cont = printPath(parent, B);
-			ordena[i] = cont;
-			//printf("conta \n");
-			printf("\n");
-
-			if(cont != 1){	
-				j = 0;
-				
-				while(1){
-			
-						if(j == 0){
-							destino = B;
-						}else{
-							destino = origem;
-						}
-
-						origem = parent[destino];
-
-						if(origem == -1){ //estado = 6;
-							break;}
-
-						printf("origem=%d dest=%d\n",origem,destino);
-
-						if(destino == origem-1){
-							entradas[destino][0] = origem;
-							saidas[origem][2] = destino;
-						}else if(destino == origem-TAM){
-							entradas[destino][1] = origem; 
-							saidas[origem][3] = destino; 
-						}else if(destino == origem+1){
-							entradas[destino][2] = origem; 
-							saidas[origem][0] = destino; 
-						}else if(destino == origem+TAM){
-							entradas[destino][3] = origem;
-							saidas[origem][1] = destino;  
-						}else{
-							printf("DEU RUIM\n");
-							FLAG = 1;  //estado = 6;
-							//exit(1);
-							break;
-						}
-
-						//marca ALU como usada
-						//printf("%d %d %d \n",ALUREG[destino], BYPASS[destino], destino);
-						if(!flag_multicast){
-							if(destino == B){
-								printf("dest e B \n");
-								if(ALUREG[destino] == 1){
-									printf("DEU RUIM B\n");
-									FLAG = 1; estado = 6;
-									break;
-								}else
-									ALU[destino] = 1;
-							}else if(BYPASS[destino] == 0){
-								BYPASS[destino] = 1;
-							}else if(ALUREG[destino] == 0 && ALU[destino] == 0){
-								ALUREG[destino] = 1;
-							}
-							else{
-								printf("DEU RUIM bypassXalureg\n");
-								FLAG = 1;
-								//estado = 6;
-								break;
-							}
-						}
-							
-					//break;
-					//case 6:
-						//aumenta peso das arestas que levam a esse mesmo destino
-						for(int aux=0; aux<V;aux++)
-							if(m[aux][destino] != 0)
-								m[aux][destino]++;				 
-						//remove aresta usada
-						m[origem][destino] = 0;
-						//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
-						ORIGEM_DF[origem][destino] = A;
-						//printf("A = %d\n", A);
-
-						j++;	
-					//break;	
 				}
 
-				if(FLAG == 1)
-					break;
-					//return 1;
+				//marca ALU como usada
+				//printf("%d %d %d \n",ALUREG[destino], BYPASS[destino], destino);
+					if(destino == B){
+						printf("dest e B \n");
+						if(ALUREG[destino] == 1){
+							printf("DEU RUIM B\n");
+							FLAG = 1;
+							break;
+						}else
+							ALU[destino] = 1;
+					}else if(BYPASS[destino] == 0){
+						BYPASS[destino] = 1;
+					}else if(ALUREG[destino] == 0 && ALU[destino] == 0){
+						ALUREG[destino] = 1;
+					}
+					else{
+						printf("DEU RUIM bypassXalureg\n");
+						FLAG = 1;
+						break;
+					}
+					
 
+				//aumenta peso das arestas que levam a esse mesmo destino
+				for(int aux=0; aux<V;aux++)
+					if(m[aux][destino] != 0)
+						m[aux][destino]++;				 
+				//remove aresta usada
+				m[origem][destino] = 0;
+				//salva a origem no dataflow dessa aresta roteada em cada um dos PEs da rota
+				ORIGEM_DF[origem][destino] = A;
+				//printf("A = %d\n", A)
 
-			//}
-		}	
+				j++;		
+			}
+			//printf("SAI ");
+			//printf("%d \n",FLAG);
+			if(FLAG == 1)
+				break;
+		}
+
 	}
+
 
 }
 
